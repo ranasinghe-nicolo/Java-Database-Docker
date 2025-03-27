@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql_container
+    #restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: my_database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - java-network  
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    #platform: linux/arm64/v8               ## uncomment if you have ARM proccesor (Apple M1 and beyond)
+    container_name: phpmyadmin_container
+    #restart: always
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - java-network  
+
+volumes:
+  mysql_data:
+
+networks:
+  java-network:
+    driver: bridge  
